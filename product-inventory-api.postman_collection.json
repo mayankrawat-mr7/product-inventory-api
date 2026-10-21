@@ -78,13 +78,7 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-              "pm.test('Returns success and requested quantity', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.success).to.eql(true);",
-              "  pm.expect(body.message).to.eql('Inventory updated successfully');",
-              "  pm.expect(body.quantity).to.eql(20);",
-              "});"
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));\npm.test('Returns success and requested quantity', () => {\n  const body = pm.response.json();\n  pm.expect(body.success).to.eql(true);\n  pm.expect(body.message).to.eql('Inventory updated successfully');\n  pm.expect(body.quantity).to.eql(20);\n});"
             ]
           }
         }
@@ -103,7 +97,12 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"variantId\": \"{{variantId}}\",\n  \"locationId\": \"{{locationId}}\",\n  \"quantity\": 20\n}"
+          "raw": "{\n  \"variantId\": \"{{variantId}}\",\n  \"locationId\": \"{{locationId}}\",\n  \"quantity\": 20\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
         "url": {
           "raw": "{{baseUrl}}/api/update-inventory",
@@ -245,15 +244,7 @@
           "script": {
             "type": "text/javascript",
             "exec": [
-              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
-              "pm.test('Returns product, variant, oldPrice and newPrice', () => {",
-              "  const body = pm.response.json();",
-              "  pm.expect(body.success).to.eql(true);",
-              "  pm.expect(body).to.have.property('product');",
-              "  pm.expect(body).to.have.property('variant');",
-              "  pm.expect(body).to.have.property('oldPrice');",
-              "  pm.expect(body.newPrice).to.eql('1499.00');",
-              "});"
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));\npm.test('Returns product, variant, oldPrice and newPrice', () => {\n  const body = pm.response.json();\n  pm.expect(body.success).to.eql(true);\n  pm.expect(body).to.have.property('product');\n  pm.expect(body).to.have.property('variant');\n  pm.expect(body).to.have.property('oldPrice');\n  pm.expect(body.newPrice).to.eql('1499.00');\n});"
             ]
           }
         }
@@ -268,7 +259,12 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"productId\": \"{{productId}}\",\n  \"variantId\": \"{{variantId}}\",\n  \"price\": \"1499.00\"\n}"
+          "raw": "{\n  \"productId\": \"{{productId}}\",\n  \"variantId\": \"{{variantId}}\",\n  \"price\": \"1499.00\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
         },
         "url": {
           "raw": "{{baseUrl}}/api/product-price",
@@ -477,7 +473,7 @@
     },
     {
       "key": "productId",
-      "value": "gid://shopify/Product/9606630572204"
+      "value": "gid://shopify/Product/9606630539436"
     },
     {
       "key": "variantId",
