@@ -223,7 +223,7 @@ The exact response depends on the endpoint and the error encountered.
 
 ## Testing with Postman
 
-Import `Product-Inventory-API.postman_collection.json` into Postman.
+Import `product-inventory-api.postman_collection.json` into Postman.
 
 1. Set the `baseUrl` variable to `http://localhost:3000`.
 2. Configure the API key variable to match `API_KEY` in `.env`.
