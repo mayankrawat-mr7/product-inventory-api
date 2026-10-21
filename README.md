@@ -233,6 +233,14 @@ Import `product-inventory-api.postman_collection.json` into Postman.
 
 The collection includes successful requests and validation tests for inventory, price, and metafield endpoints.
 
+## API Response Screenshots
+
+The repository includes screenshots of successful Postman responses:
+
+- [Inventory update](screenshots/01-inventory-update.png)
+- [Price update](screenshots/02-price-update.png)
+- [Metafield creation](screenshots/03-metafield-create.png)
+
 ## Project Structure
 
 ```text
