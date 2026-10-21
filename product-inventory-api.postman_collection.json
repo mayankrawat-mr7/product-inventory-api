@@ -1,0 +1,495 @@
+{
+  "info": {
+    "_postman_id": "94c5d8eb-221f-4393-b3e2-1a089b32eb28",
+    "name": "Product Inventory API",
+    "description": "Tests for the Product Inventory API (Shopify Admin GraphQL). Set baseUrl, apiKey, and the Shopify IDs in the collection variables before running.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "57723162",
+    "_collection_link": "https://go.postman.co/collection/57723162-94c5d8eb-221f-4393-b3e2-1a089b32eb28?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('Server is running', () => pm.expect(pm.response.json().success).to.eql(true));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Shopify Auth Check",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('Shopify token received', () => pm.expect(pm.response.json().tokenReceived).to.eql(true));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/test-shopify-auth",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "test-shopify-auth"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Inventory - Update (success)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('Returns success and requested quantity', () => {",
+              "  const body = pm.response.json();",
+              "  pm.expect(body.success).to.eql(true);",
+              "  pm.expect(body.message).to.eql('Inventory updated successfully');",
+              "  pm.expect(body.quantity).to.eql(20);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "x-idempotency-key",
+            "value": "{{idempotencyKey}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"variantId\": \"{{variantId}}\",\n  \"locationId\": \"{{locationId}}\",\n  \"quantity\": 20\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/update-inventory",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "update-inventory"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Inventory - Negative quantity (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 400', () => pm.response.to.have.status(400));",
+              "pm.test('Success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"variantId\": \"{{variantId}}\",\n  \"locationId\": \"{{locationId}}\",\n  \"quantity\": -1\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/update-inventory",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "update-inventory"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Inventory - Missing variantId (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 400', () => pm.response.to.have.status(400));",
+              "pm.test('Success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"locationId\": \"{{locationId}}\",\n  \"quantity\": 20\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/update-inventory",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "update-inventory"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Inventory - No API key (401)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 401', () => pm.response.to.have.status(401));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"variantId\": \"{{variantId}}\",\n  \"locationId\": \"{{locationId}}\",\n  \"quantity\": 20\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/update-inventory",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "update-inventory"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Price - Update (success)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('Returns product, variant, oldPrice and newPrice', () => {",
+              "  const body = pm.response.json();",
+              "  pm.expect(body.success).to.eql(true);",
+              "  pm.expect(body).to.have.property('product');",
+              "  pm.expect(body).to.have.property('variant');",
+              "  pm.expect(body).to.have.property('oldPrice');",
+              "  pm.expect(body.newPrice).to.eql('1499.00');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productId\": \"{{productId}}\",\n  \"variantId\": \"{{variantId}}\",\n  \"price\": \"1499.00\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/product-price",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "product-price"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Price - Zero price (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 400', () => pm.response.to.have.status(400));",
+              "pm.test('Success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productId\": \"{{productId}}\",\n  \"variantId\": \"{{variantId}}\",\n  \"price\": 0\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/product-price",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "product-price"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Price - Three decimal places (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 400', () => pm.response.to.have.status(400));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productId\": \"{{productId}}\",\n  \"variantId\": \"{{variantId}}\",\n  \"price\": \"19.999\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/product-price",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "product-price"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Metafield - Create/Update (success)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 200', () => pm.response.to.have.status(200));",
+              "pm.test('Returns saved metafield', () => {",
+              "  const body = pm.response.json();",
+              "  pm.expect(body.success).to.eql(true);",
+              "  pm.expect(body.message).to.eql('Metafield saved successfully');",
+              "  pm.expect(body.metafield.namespace).to.eql('custom');",
+              "  pm.expect(body.metafield.key).to.eql('material');",
+              "  pm.expect(body.metafield.value).to.eql('Cotton');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productId\": \"{{productId}}\",\n  \"namespace\": \"custom\",\n  \"key\": \"material\",\n  \"type\": \"single_line_text_field\",\n  \"value\": \"Cotton\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/product-metafield",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "product-metafield"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Metafield - Missing key (400)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status is 400', () => pm.response.to.have.status(400));",
+              "pm.test('Success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"productId\": \"{{productId}}\",\n  \"namespace\": \"custom\",\n  \"type\": \"single_line_text_field\",\n  \"value\": \"Cotton\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/product-metafield",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "product-metafield"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "x-api-key",
+        "type": "string"
+      },
+      {
+        "key": "value",
+        "value": "{{apiKey}}",
+        "type": "string"
+      },
+      {
+        "key": "in",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "apiKey",
+      "value": "028311ca13656cfb676cf472fdf2b3d0a9c7a36f2e193988ac6558f3fd96b504"
+    },
+    {
+      "key": "productId",
+      "value": "gid://shopify/Product/9606630572204"
+    },
+    {
+      "key": "variantId",
+      "value": "gid://shopify/ProductVariant/47575134306476"
+    },
+    {
+      "key": "locationId",
+      "value": "gid://shopify/Location/87478927532"
+    },
+    {
+      "key": "idempotencyKey",
+      "value": "postman-inventory-test-1"
+    }
+  ]
+}
