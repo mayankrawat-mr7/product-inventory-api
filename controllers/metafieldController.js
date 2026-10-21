@@ -1,4 +1,5 @@
 const { setProductMetafield } = require("../services/metafieldService");
+
 async function setMetafieldController(req, res) {
   const { productId, namespace, key, type, value } = req.body || {};
   const isInvalid =
@@ -24,11 +25,16 @@ async function setMetafieldController(req, res) {
     const result = await setProductMetafield({ productId, namespace, key, type, value });
 
     if (result?.kind === "shopify") {
-      return res.status(502).json({ success: false, message: result.message, errors: result.errors });
+      return res
+        .status(502)
+        .json({ success: false, message: result.message, errors: result.errors });
     }
 
     if (!result) {
-      return res.status(502).json({ success: false, message: "Shopify did not return a metafield result" });
+      return res.status(502).json({
+        success: false,
+        message: "Shopify did not return a metafield result",
+      });
     }
 
     if (result.userErrors?.length) {
@@ -49,4 +55,5 @@ async function setMetafieldController(req, res) {
     return res.status(500).json({ success: false, message: "Product metafield request failed" });
   }
 }
+
 module.exports = { setMetafieldController };

@@ -1,4 +1,5 @@
 const { updatePrice } = require("../services/priceService");
+
 function isValidPrice(price) {
   if (typeof price === "string" && !/^\d+(\.\d{1,2})?$/.test(price)) return false;
   const numericPrice = typeof price === "string" && price.trim() !== "" ? Number(price) : price;
@@ -53,4 +54,5 @@ async function updatePriceController(req, res) {
     return res.status(500).json({ success: false, message: "Product price update failed" });
   }
 }
+
 module.exports = { updatePriceController };

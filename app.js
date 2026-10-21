@@ -3,10 +3,34 @@ const express = require("express");
 const inventoryRoutes = require("./routes/inventoryRoutes");
 const priceRoutes = require("./routes/priceRoutes");
 const metafieldRoutes = require("./routes/metafieldRoutes");
+
 const app = express();
+
 app.use(express.json());
-app.get("/", (req, res) => res.json({ success: true, message: "Product Inventory API is running" }));
-app.get("/api/test-shopify-auth", require("./middlewares/authMiddleware").authenticateApiKey, async (req, res) => { try { const { getShopifyAccessToken } = require("./config/shopify"); await getShopifyAccessToken(); res.json({ success: true, message: "Shopify access token obtained successfully", tokenReceived: true }); } catch { res.status(500).json({ success: false, message: "Failed to authenticate with Shopify" }); } });
+app.get("/", (req, res) =>
+  res.json({ success: true, message: "Product Inventory API is running" })
+);
+
+app.get(
+  "/api/test-shopify-auth",
+  require("./middlewares/authMiddleware").authenticateApiKey,
+  async (req, res) => {
+    try {
+      const { getShopifyAccessToken } = require("./config/shopify");
+      await getShopifyAccessToken();
+      res.json({
+        success: true,
+        message: "Shopify access token obtained successfully",
+        tokenReceived: true,
+      });
+    } catch {
+      res.status(500).json({
+        success: false,
+        message: "Failed to authenticate with Shopify",
+      });
+    }
+  }
+);
 app.use("/api", inventoryRoutes, priceRoutes, metafieldRoutes);
 app.use((error, req, res, next) => {
   console.error(error);
