@@ -261,5 +261,9 @@ product-inventory-api/
 │   ├── inventoryService.js
 │   ├── priceService.js
 │   └── metafieldService.js
+├── screenshots/
+│   ├── 01-inventory-update.png
+│   ├── 02-price-update.png
+│   └── 03-metafield-create.png
 ├── app.js
 ├   
